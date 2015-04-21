@@ -53,8 +53,7 @@ class BinarySearchTree
     end
   end
 
-  # return all values of tree in breadth-first order
-  def values
+  def list_breadth_first
     values = [ @tree.value ]
     queue = [ @tree ]
 
@@ -73,6 +72,30 @@ class BinarySearchTree
       end
     end
 
+    values
+  end
+
+  # root, left, right
+  def list_preorder(node=@tree, values=[])
+    values << node.value
+    list_preorder(node.left, values) if !node.left.nil?
+    list_preorder(node.right, values) if !node.right.nil?
+    values
+  end
+ 
+  # left, root, right
+  def list_inorder(node=@tree, values=[])
+    list_inorder(node.left, values) if !node.left.nil?
+    values << node.value
+    list_inorder(node.right, values) if !node.right.nil?
+    values
+  end
+
+  # left, right, root
+  def list_postorder(node=@tree, values=[])
+    list_postorder(node.left, values) if !node.left.nil?
+    list_postorder(node.right, values) if !node.right.nil?
+    values << node.value
     values
   end
 

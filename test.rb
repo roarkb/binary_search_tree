@@ -16,8 +16,19 @@ t.insert("foo")
 puts
 (1..25).to_a.each { |e| puts "#{e}: #{t.lookup(e)}" }
 puts
-p t.values
+puts "breadth-first list:"
+p t.list_breadth_first
 puts
+puts "preorder list:"
+p t.list_preorder
+puts
+puts "inorder list:"
+p t.list_inorder
+puts
+puts "postorder list:"
+p t.list_postorder
+puts
+puts "all paths root to leaf:"
 p t.paths
 puts
 p t.right.left.right.value
@@ -36,8 +47,19 @@ t.insert(5)
 puts
 [ "qwe", "foo", "asd", "gaz", "zxc", "fub", "wer", "mif", "sup" ].each { |e| puts "#{e}: #{t.lookup(e)}" }
 puts
-p t.values
+puts "breadth-first list:"
+p t.list_breadth_first
 puts
+puts "preorder list:"
+p t.list_preorder
+puts
+puts "inorder list:"
+p t.list_inorder
+puts
+puts "postorder list:"
+p t.list_postorder
+puts
+puts "all paths root to leaf:"
 p t.paths
 puts
 p t.right.left.value
