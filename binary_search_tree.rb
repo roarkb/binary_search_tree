@@ -2,11 +2,13 @@
 
 require "./node"
 
-class BinarySearchTree # ints only
+class BinarySearchTree
   def initialize(value)
-    validate(value) do
+    if value.class == Fixnum || value.class == Float || value.class == String
       @tree = Node.new(value)
-      @value = @tree.value
+      @value = value
+    else
+      puts "#{value} is not an intiger, float or a string"
     end
   end
 
@@ -20,10 +22,10 @@ class BinarySearchTree # ints only
     @tree.right
   end
 
-  def insert(values) # single int or array of ints
-    if values.kind_of? Integer
+  def insert(values) # single element or array
+    if values.class == Fixnum || values.class == String
       insert_one(values)
-    elsif values.kind_of? Array
+    elsif values.class == Array
       values.each { |e| insert_one(e) }
     else
       puts "not a valid format"
@@ -34,13 +36,13 @@ class BinarySearchTree # ints only
     validate(value) do
       case node.value <=> value
       when -1
-        if node.right == nil
+        if node.right.nil?
           false
         else
           lookup(value, node.right)
         end
       when 1
-        if node.left == nil
+        if node.left.nil?
           false
         else
           lookup(value, node.left)
@@ -51,7 +53,8 @@ class BinarySearchTree # ints only
     end
   end
 
-  def values # breadth-first
+  # return all values of tree in breadth-first order
+  def values
     values = [ @tree.value ]
     queue = [ @tree ]
 
@@ -60,7 +63,7 @@ class BinarySearchTree # ints only
         
         [ node.left, node.right ].each do |e|
           
-          if e != nil
+          if !e.nil?
             values << e.value
             queue << e
           end
@@ -73,7 +76,8 @@ class BinarySearchTree # ints only
     values
   end
 
-  def paths # depth-first 
+  # return all paths in tree from root to leaf
+  def paths
     curr_node = @tree
     curr_path = []
     track = {}
@@ -90,7 +94,7 @@ class BinarySearchTree # ints only
       # am i allowed to go left?
       if track.include?(curr_node.value) && track[curr_node.value].include?("left")
         # i am not allowed to go left but am i allowed/able to go right?
-        if track[curr_node.value].include?("right") || curr_node.right == nil
+        if track[curr_node.value].include?("right") || curr_node.right.nil?
           # i am not allowed to go left and i am not allowed/able to go right, incomplete path and dead end
           if curr_path == [ @tree.value ]
             finished = true
@@ -113,7 +117,7 @@ class BinarySearchTree # ints only
         end
         
       # i am alowed to go left but am i able?
-      elsif curr_node.left == nil
+      elsif curr_node.left.nil?
         # i am not able to go left but am i allowed to go right?
         if track.include?(curr_node.value) && track[curr_node.value].include?("right")
           # i am not able to go left and i am not allowed to go right, incomplete path and dead end
@@ -131,7 +135,7 @@ class BinarySearchTree # ints only
           end
 
         # i am allowed to go right but am i able?
-        elsif curr_node.right == nil
+        elsif curr_node.right.nil?
           # i am a leaf node, this path is complete
           if curr_path.length > 1
             e = curr_path[-2]
@@ -165,10 +169,12 @@ class BinarySearchTree # ints only
   private
   
   def validate(value)
-    if value.kind_of? Integer
+    if ( (@tree.value.class == Fixnum || @tree.value.class == Float) && (value.class == Fixnum || value.class == Float) ) ||
+       (@tree.value.class == String && value.class == String)
+      
       yield
     else
-      puts '"' + value + '"' + " is not an intiger"
+      puts "#{value} does not math datatype of root: #{@tree.value}"
     end
   end
 
@@ -176,13 +182,13 @@ class BinarySearchTree # ints only
     validate(value) do
       case node.value <=> value
       when -1
-        if node.right == nil
+        if node.right.nil?
           node.right = Node.new(value)
         else
           insert_one(value, node.right)
         end
       when 1
-        if node.left == nil
+        if node.left.nil?
           node.left = Node.new(value)
         else
           insert_one(value, node.left)
