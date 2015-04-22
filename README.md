@@ -1,7 +1,8 @@
 # binary_search_tree
 
 ```
- R  O  A  R  K  T  R  E  E
+  R  O  A  R  K
+           T  R  E  E
 
 
            R
@@ -11,7 +12,6 @@
     R    K  T   R
   /  \
  E    E
-
 
  R
  |__ A
