@@ -7,8 +7,6 @@ class BinarySearchTree
     @tree = Node.new(value)
   end
 
-  attr_reader :value
-
   def left
     @tree.left
   end
