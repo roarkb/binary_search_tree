@@ -5,7 +5,6 @@ require "./node"
 class BinarySearchTree
   def initialize(value)
     @tree = Node.new(value)
-    @value = value
   end
 
   attr_reader :value
