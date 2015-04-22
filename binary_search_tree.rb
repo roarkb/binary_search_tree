@@ -4,12 +4,8 @@ require "./node"
 
 class BinarySearchTree
   def initialize(value)
-    if value.class == Fixnum || value.class == Float || value.class == String
-      @tree = Node.new(value)
-      @value = value
-    else
-      puts "#{value} is not an intiger, float or a string"
-    end
+    @tree = Node.new(value)
+    @value = value
   end
 
   attr_reader :value
@@ -22,33 +18,17 @@ class BinarySearchTree
     @tree.right
   end
 
-  def insert(values) # single element or array
-    if values.class == Fixnum || values.class == String
-      insert_one(values)
-    elsif values.class == Array
-      values.each { |e| insert_one(e) }
-    else
-      puts "not a valid format"
-    end
+  def insert(*values)
+    values.each { |e| insert_one(e) }
   end
 
-  def lookup(value, node=@tree)
-    validate(value) do
-      case node.value <=> value
-      when -1
-        if node.right.nil?
-          false
-        else
-          lookup(value, node.right)
-        end
-      when 1
-        if node.left.nil?
-          false
-        else
-          lookup(value, node.left)
-        end
-      when 0
-        true
+  def lookup(*values)
+    if values.length == 1
+      lookup_one(values.first)
+    else
+      values.inject({}) do |h,e|
+        h[e] = lookup_one(e)
+        h
       end
     end
   end
@@ -191,34 +171,45 @@ class BinarySearchTree
   
   private
   
-  def validate(value)
-    if ( (@tree.value.class == Fixnum || @tree.value.class == Float) && (value.class == Fixnum || value.class == Float) ) ||
-       (@tree.value.class == String && value.class == String)
-      
-      yield
-    else
-      puts "#{value} does not math datatype of root: #{@tree.value}"
+  def insert_one(value, node=@tree)
+    case node.value <=> value
+    when -1
+      if node.right.nil?
+        node.right = Node.new(value)
+      else
+        insert_one(value, node.right)
+      end
+    when 1
+      if node.left.nil?
+        node.left = Node.new(value)
+      else
+        insert_one(value, node.left)
+      end
+    when 0
+      puts "#{value} already exists"
+    when nil
+      puts "comparison failed: #{node.value} <=> #{value}"
     end
   end
 
-  def insert_one(value, node=@tree)
-    validate(value) do
-      case node.value <=> value
-      when -1
-        if node.right.nil?
-          node.right = Node.new(value)
-        else
-          insert_one(value, node.right)
-        end
-      when 1
-        if node.left.nil?
-          node.left = Node.new(value)
-        else
-          insert_one(value, node.left)
-        end
-      when 0
-        puts "#{value} already exists"
+  def lookup_one(value, node=@tree)
+    case node.value <=> value
+    when -1
+      if node.right.nil?
+        false
+      else
+        lookup_one(value, node.right)
       end
+    when 1
+      if node.left.nil?
+        false
+      else
+        lookup_one(value, node.left)
+      end
+    when 0
+      true
+    when nil
+      puts "comparison failed: #{node.value} <=> #{value}"
     end
   end
   
